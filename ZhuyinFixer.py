@@ -28,13 +28,42 @@ def fix2zhuyin(text):
             word = ""
         else:
             word += mapping.get(char, "?")
+            
     if word != "":
         result.append(word)
         
     return result
 
+def ChineseDictFile():
+    with open("ChineseDictionary.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+        
+def WordSplit(wordlist):
+    i = 0
+    length = len(wordlist)
+    result = []
+    while i < length:
+        matched = False
+        for j in range((length - i), 0, -1):
+            temp = wordlist[i:i+j]
+            tempwords = "".join(temp)
+            if tempwords in ChineseDict:
+                result.append(tempwords)
+                i += j
+                matched = True
+                break
+                
+        if not matched:
+            result.append(wordlist[i])
+            i += 1
+            
+    return result
 
 if __name__ == "__main__":
     InputText = input("Please type wrong characters:")
     zhuyin = fix2zhuyin(InputText)
     print("Transfer to Zhuyin is: %s" %(zhuyin))
+    ChineseDict = ChineseDictFile()
+    words = WordSplit(zhuyin)
+    print("Transfer to Words is: %s" %(words))
+    
