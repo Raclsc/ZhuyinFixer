@@ -23,11 +23,11 @@ def fix2zhuyin(text):
     result = []
     for char in text:
         if char in [" ", "6", "3", "4", "7"]:
-            word += mapping.get(char, "?")
+            word += mapping.get(char, f"{char}")
             result.append(word)
             word = ""
         else:
-            word += mapping.get(char, "?")
+            word += mapping.get(char, f"{char}")
             
     if word != "":
         result.append(word)
@@ -58,12 +58,21 @@ def WordSplit(wordlist):
             i += 1
             
     return result
+    
+def fix2Chinese(zhuyinWords):
+    text = ""
+    for word in zhuyinWords:
+        text += ChineseDict.get(word, f"{word}")
+        
+    return text
 
 if __name__ == "__main__":
     InputText = input("Please type wrong characters:")
     zhuyin = fix2zhuyin(InputText)
-    print("Transfer to Zhuyin is: %s" %(zhuyin))
+    print(f"Transfer to Zhuyin is: {zhuyin}")
     ChineseDict = ChineseDictFile()
     words = WordSplit(zhuyin)
-    print("Transfer to Words is: %s" %(words))
+    print(f"Transfer to Words is: {words}")
+    ChineseText = fix2Chinese(words)
+    print(f"Transfer to Chinese is: {ChineseText}")
     
