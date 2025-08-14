@@ -18,10 +18,13 @@ def fix2zhuyin(text):
     with open("Zhuyin_mapping.json", "r", encoding="utf-8") as f:
         mapping = json.load(f)
         
+    if text[-1] not in ["6", "3", "4", "7"]:    # 最末字不含聲調時，視為一聲(陰平聲)，補空格
+        text = text + " "
+        
     word = ""
     result = []
     for char in text:
-        if char in [" ", "6", "3", "4", "7"]:   # 聲調，空格指一聲(陰平聲)
+        if char in [" ", "6", "3", "4", "7", "+"]:   # 聲調，空格指一聲(陰平聲)，6、3、4、7分別指二聲、三聲、四聲與輕聲
             word += mapping.get(char, f"{char}")
             result.append(word)
             word = ""
@@ -32,8 +35,7 @@ def fix2zhuyin(text):
         result.append(word)
         
     return result
-
-        
+ 
 def WordSplit(wordlist):
     """使用最大匹配演算法分割注音成詞語"""
     i = 0
@@ -64,13 +66,45 @@ def fix2Chinese(zhuyinWords):
         
     return text
 
-if __name__ == "__main__":
-    InputText = input("Please type wrong characters:")
+def convert():
+    """讀取輸入的亂碼字串依序轉換成注音符號及中文詞語後輸出至表格中"""
+    InputText = InputEntry.get("1.0", tk.END).strip().replace("\n", "+")
     zhuyin = fix2zhuyin(InputText)
-    print(f"Transfer to Zhuyin is: {zhuyin}")
+    zhuyinWords = WordSplit(zhuyin)
+    Chinesetext = fix2Chinese(zhuyinWords)
+
+    ZhuyinLable.config(state="normal")
+    ZhuyinLable.delete("1.0", tk.END)
+    ZhuyinLable.insert("1.0", " ".join(zhuyin).replace("+ ", "\n"))
+    ZhuyinLable.config(state="disabled")
+    
+    ChineseLable.config(state="normal")
+    ChineseLable.delete("1.0", tk.END)
+    ChineseLable.insert("1.0", "".join(Chinesetext).replace("+", "\n"))
+    ChineseLable.config(state="disabled")
+
+
+if __name__ == "__main__":
     ChineseDict = ChineseDictFile()
-    words = WordSplit(zhuyin)
-    print(f"Transfer to Words is: {words}")
-    ChineseText = fix2Chinese(words)
-    print(f"Transfer to Chinese is: {ChineseText}")
+    root = tk.Tk()
+    root.title("I Forgot To Change The Input Method. - 注音輸入法")
+    
+    tk.Label(root, text="請貼上英數字字串:", font=(14)).pack(pady=5)
+    InputEntry = tk.Text(root, wrap="char", height=3, width=60, font=(12))
+    InputEntry.pack(padx=5, pady=5, fill="both")
+    InputEntry.insert("1.0", "hk4g4g4z04")
+    
+    tk.Button(root, text="轉換", font=(14), background="#B2CCEE", command=convert).pack(padx=5, pady=5, fill="both")
+
+    tk.Label(root, text="注音:", font=(14)).pack(pady=5)
+    ZhuyinLable = tk.Text(root, wrap="char", height=3, width=60, font=(12))
+    ZhuyinLable.pack(padx=5, pady=5, fill="both")
+    ZhuyinLable.insert("1.0", "ㄘㄜˋ ㄕˋ ㄕˋ ㄈㄢˋ")
+    
+    tk.Label(root, text="中文:", font=(14)).pack(pady=5)
+    ChineseLable = tk.Text(root, wrap="char", height=3, width=60, font=(12))
+    ChineseLable.pack(padx=5, pady=10, fill="both")
+    ChineseLable.insert("1.0", "測試示範")
+
+    root.mainloop()
     
