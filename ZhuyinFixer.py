@@ -62,7 +62,11 @@ def fix2Chinese(zhuyinWords):
     """將分割後的注音詞語轉換成繁體中文詞語"""
     text = ""
     for word in zhuyinWords:
-        text += ChineseDict.get(word, f"{word}")
+        temp = ChineseDict.get(word, f"{word}")
+        if word in ChineseDict.keys():      # 如果出現同音字詞預設選用第一個做為轉換的中文詞語
+            text += temp[0]
+        else:
+            text += temp
         
     return text
 
