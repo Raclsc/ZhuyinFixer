@@ -4,35 +4,71 @@
 #       再將注音符號轉換成繁體中文。
 #       支援詞語配對，盡可能地將注音轉換成完整詞語。
 
+import os
+import sys
 import json
 import tkinter as tk
 
 
+def ResourcePath(filepath):
+    """取得打包後的資源路徑"""
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, filepath)
+    return os.path.join(os.path.abspath("."), filepath)
+
 def ChineseDictFile():
     """讀取中文字詞典檔案"""
-    with open("ChineseDictionary.json", "r", encoding="utf-8") as f:
+    DictFile = ResourcePath("ChineseDictionary.json")
+    with open(DictFile, "r", encoding="utf-8") as f:
+    #with open("ChineseDictionary.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
 def fix2zhuyin(text):
     """將亂碼字串轉換成注音符號列表，並以聲調當作分界"""
-    with open("Zhuyin_mapping.json", "r", encoding="utf-8") as f:
+    Consonants = ["ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", 
+                  "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ"]
+    Medials = ["ㄧ", "ㄨ", "ㄩ"]
+    Rhymes = ["ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ"]
+    Tonal = ["-", "ˊ", "ˇ", "ˋ", "˙"]
+    
+    DictFile = ResourcePath("Zhuyin_mapping.json")
+    with open(DictFile, "r", encoding="utf-8") as f:
+    #with open("Zhuyin_mapping.json", "r", encoding="utf-8") as f:
         mapping = json.load(f)
         
     if text[-1] not in ["6", "3", "4", "7"]:    # 最末字不含聲調時，視為一聲(陰平聲)，補空格
         text = text + " "
         
-    word = ""
+    Cona = ""
+    Medi = ""
+    Rhy = ""
+    Ton = ""
     result = []
     for char in text:
-        if char in [" ", "6", "3", "4", "7", "+"]:   # 聲調，空格指一聲(陰平聲)，6、3、4、7分別指二聲、三聲、四聲與輕聲
-            word += mapping.get(char, f"{char}")
+        mark = mapping.get(char, f"{char}")
+        
+        if mark in Consonants:
+            Cona = mark
+        elif mark in Medials:
+            Medi = mark
+        elif mark in Rhymes:
+            Rhy = mark
+        elif mark in Tonal:
+            Ton = mark
+            word = Cona + Medi + Rhy + Ton
             result.append(word)
-            word = ""
+            Cona = ""
+            Medi = ""
+            Rhy = ""
+            Ton = ""
         else:
-            word += mapping.get(char, f"{char}")
-            
-    if word != "":
-        result.append(word)
+            word = Cona + Medi + Rhy + Ton
+            result.append(word)
+            Cona = ""
+            Medi = ""
+            Rhy = ""
+            Ton = ""
+            result.append(mark)
         
     return result
  
@@ -89,9 +125,10 @@ def convert():
 
 
 if __name__ == "__main__":
+    version = "beta"
     ChineseDict = ChineseDictFile()
     root = tk.Tk()
-    root.title("I Forgot To Change The Input Method. - 注音輸入法")
+    root.title(f"I Forgot To Change The Input Method. - 注音輸入法 ver.{version}")
     
     tk.Label(root, text="請貼上英數字字串:", font=(14)).pack(pady=5)
     InputEntry = tk.Text(root, wrap="char", height=3, width=60, font=(12))
