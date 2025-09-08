@@ -1,0 +1,43 @@
+# ========================
+# Python 常見忽略檔案
+# ========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# 虛擬環境
+env/
+venv/
+.venv/
+
+# ========================
+# PyInstaller 打包產物
+# ========================
+build/
+dist/
+*.spec
+
+# ========================
+# 系統 / IDE 自動產生檔案
+# ========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# ========================
+# 本地專案特定檔案
+# ========================
+# 打包時用的版本資訊檔，不需要上傳
+version_info.txt
+
+# 打包出來的 exe
+*.exe
+
+# log / 暫存檔
+*.log
