@@ -108,7 +108,7 @@ def fix2Chinese(zhuyinWords):
 
 def convert():
     """讀取輸入的亂碼字串依序轉換成注音符號及中文詞語後輸出至表格中"""
-    InputText = InputEntry.get("1.0", tk.END).strip().replace("\n", "+")
+    InputText = InputEntry.get("1.0", tk.END).strip().replace("\n", "+").lower()
     zhuyin = fix2zhuyin(InputText)
     zhuyinWords = WordSplit(zhuyin)
     Chinesetext = fix2Chinese(zhuyinWords)
