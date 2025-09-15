@@ -20,7 +20,6 @@ def ChineseDictFile():
     """讀取中文字詞典檔案"""
     DictFile = ResourcePath("ChineseDictionary.json")
     with open(DictFile, "r", encoding="utf-8") as f:
-    #with open("ChineseDictionary.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
 def fix2zhuyin(text):
@@ -33,7 +32,6 @@ def fix2zhuyin(text):
     
     DictFile = ResourcePath("Zhuyin_mapping.json")
     with open(DictFile, "r", encoding="utf-8") as f:
-    #with open("Zhuyin_mapping.json", "r", encoding="utf-8") as f:
         mapping = json.load(f)
         
     if text[-1] not in ["6", "3", "4", "7"]:    # 最末字不含聲調時，視為一聲(陰平聲)，補空格
