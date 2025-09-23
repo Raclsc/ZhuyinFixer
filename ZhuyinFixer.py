@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import tkinter as tk
+import importlib.metadata
 
 
 def ResourcePath(filepath):
@@ -123,10 +124,10 @@ def convert():
 
 
 if __name__ == "__main__":
-    version = "beta"
+    __version__ = "1.0.1.8-beta"
     ChineseDict = ChineseDictFile()
     root = tk.Tk()
-    root.title(f"I Forgot To Change The Input Method. - 注音輸入法 ver.{version}")
+    root.title(f"I Forgot To Change The Input Method. - 注音輸入法 ver.{__version__}")
     
     tk.Label(root, text="請貼上英數字字串:", font=(14)).pack(pady=5)
     InputEntry = tk.Text(root, wrap="char", height=3, width=60, font=(12))
