@@ -124,7 +124,7 @@ def convert():
 
 
 if __name__ == "__main__":
-    __version__ = "1.0.1.8-beta"
+    __version__ = "1.0.1.9-beta"
     ChineseDict = ChineseDictFile()
     root = tk.Tk()
     root.title(f"I Forgot To Change The Input Method. - 注音輸入法 ver.{__version__}")
